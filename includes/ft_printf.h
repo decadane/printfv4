@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 13:22:49 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 15:59:40 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/19 19:50:42 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,20 @@ typedef struct		s_format
 	unsigned		length;
 }					t_format;
 
+void		ft_putchar(char);
+void		ft_putstr(char*);
 
-void		ft_printf(const char *fmt, ...);
+int			ft_printf(const char *fmt, ...);
 size_t		ft_strlen(char *str);
-void		ft_print_c(char c);
-void		ft_print_s(char *s);
+int			ft_print_c(t_format, char);
+int			ft_print_s(t_format, char*);
+//void		ft_print_num(t_format, va_list);
 void		ft_print_p(void *p);
 
-char		*itoa(unsigned long long n, unsigned flag);
-int			ft_read_format(const char*, t_format*);
+char		*itoa(unsigned long long n, unsigned flags);
 t_format	*ft_create_format(void);
+int			ft_read_format(const char*, t_format*);
+int			ft_print_format(t_format *fmt, va_list args);
 
 
 #endif

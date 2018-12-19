@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 13:26:19 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 15:54:39 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/19 20:15:52 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,11 @@ static unsigned	read_flag(char ch, unsigned flags, unsigned *form_number)
 
 int				ft_read_format(const char *fmt, t_format *format)
 {
-	int		i;
+	int			i;
+	unsigned	*form_number;
 
 	i = 1;
+	form_number = &(format->width);
 	while (fmt[i] != '\0')
 	{
 		if (is_specificator(fmt[i]))
@@ -53,7 +55,13 @@ int				ft_read_format(const char *fmt, t_format *format)
 			format->spec = fmt[i++];
 			return(i);
 		}
-		format->flags |= read_flag(fmt[i], format->flags, &(format->width));
+		if (fmt[i] == '.')
+		{
+			form_number = &(format->length);
+			i++;
+			continue;
+		}
+		format->flags |= read_flag(fmt[i], format->flags, form_number);
 		if (format->flags & ERROR_FLAG)
 			exit(WRONG_SYMBOL);
 		i++;

@@ -1,36 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_s.c                                       :+:      :+:    :+:   */
+/*   ft_print_format.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/17 13:38:57 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 20:26:32 by ffahey           ###   ########.fr       */
+/*   Created: 2018/12/19 16:30:38 by ffahey            #+#    #+#             */
+/*   Updated: 2018/12/19 19:31:00 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "ft_printf.h"
 
-int		ft_print_s(t_format fmt, char *str)
+int		is_number(char ch)
 {
-	int			ret;
-	unsigned	len;
-	char		is_printed;
+	return (ch == 'd' || ch == 'i' || ch == 'u' || ch == 'o' || ch == 'x' || ch == 'X');
+}
 
-	is_printed = 0;
-	len = ft_strlen(str);
-	len = len > fmt.length ? fmt.length : len;
-	ret = len > fmt.width ? len : fmt.width;
-	if (fmt.flags & LEFTFORMAT_FLAG)
-	{
-		write(1, str, len);
-		is_printed = 1;
-	}
-	while (len < fmt.width--)
-		ft_putchar(' ');
-	if (!is_printed)
-		write(1, str, len);
-	return (ret);
+int		ft_print_format(t_format *fmt, va_list args)
+{
+	int		len;
+	
+	len = 0;
+	if (fmt->spec == 'c')
+		len = ft_print_c(*fmt, (char)va_arg(args, int));
+	if (fmt->spec == 's')
+		len = ft_print_s(*fmt, va_arg(args, char*));
+//	if (is_number(fmt->spec))
+//		ft_printf_num(format, args);
+	return (len);
 }

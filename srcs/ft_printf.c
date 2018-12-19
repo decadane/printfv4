@@ -6,18 +6,20 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/18 14:33:26 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 16:30:24 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/19 20:20:36 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include "ft_printf.h"
 
-void	ft_printf(const char *fmt, ...)
+int		ft_printf(const char *fmt, ...)
 {
+	int			ret;
 	va_list		args;
 	t_format	*format;
 	
+	ret = 0;
 	va_start(args, fmt);
 	while (1)
 	{
@@ -28,15 +30,18 @@ void	ft_printf(const char *fmt, ...)
 			if (!(format = ft_create_format()))
 				exit(-1);
 			fmt += ft_read_format(fmt, format);
-			printf("spec = %c\n", format->spec);
-			printf("flags = %u\n", format->flags);
-			printf("wifth = %u\n", format->width);
-			ft_print_format(format, args);
+//			printf("spec = %c\n", format->spec);
+//			printf("flags = %u\n", format->flags);
+//			printf("wifth = %u\n", format->width);
+//			printf("prec = %u\n", format->length);
+			ret += ft_print_format(format, args);
 			free(format);
 			continue;
 		}
 		write(1, fmt, 1);
+		ret++;
 		fmt++;
 	}
 	va_end(args);
+	return (ret);
 }
