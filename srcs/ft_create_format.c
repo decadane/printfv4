@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 15:40:54 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 15:44:41 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/26 16:42:42 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_format	*ft_create_format(void)
 		format->spec = 0;
 		format->str = NULL;
 		format->flags = 0;
-		format->length = 0;
+		format->precision = 0;
 		format->width = 0;
 	}
 	return (format);

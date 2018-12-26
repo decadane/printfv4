@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 13:26:19 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 20:15:52 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/25 14:34:17 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 static int		is_specificator(char c)
 {
 	return (c == 'd' || c == 'i' || c == 'u' || c == 'o' || 
-			c == 'x' || c == 'X' || c == 'c' || c == 's' || c == 'p');
+			c == 'x' || c == 'X' || c == 'c' || c == 's' || 
+			c == 'p' || c == '%' || c == 'f');
 }
 
-static unsigned	read_flag(char ch, unsigned flags, unsigned *form_number)
+static unsigned	read_flag(char ch, unsigned flags)
 {
 	if (ch == 'h')
 		return ((flags & H_FLAG) ? HH_FLAG : H_FLAG);
@@ -30,41 +31,58 @@ static unsigned	read_flag(char ch, unsigned flags, unsigned *form_number)
 		return (SHOWSIGN_FLAG);
 	if (ch == '#')
 		return (HASH_FLAG);
-	if (ch >= '0' && ch <= '9')
+	if (ch == ' ')
+		return (SPACE_FLAG);
+	if (ch == '0')
+		return (ZERO_FLAG);
+	return (0); 
+}
+
+static int	read_number(const char *fmt, unsigned *num)
+{
+	int		i;
+
+	i = 0;
+	*num = 0;
+	while (fmt[i] >= '0' && fmt[i] <= '9')
 	{
-		if (ch == '0' && *form_number == 0)
-			return (ZERO_FLAG);
-		*form_number *= 10;
-		*form_number += ch - '0';
-		return (flags);
+		*num *= 10;
+		*num += fmt[i] - '0';
+		i++;
 	}
-	return (ERROR_FLAG);
+	return (i);
 }
 
 int				ft_read_format(const char *fmt, t_format *format)
 {
-	int			i;
-	unsigned	*form_number;
+	int		offset;
+	int		i;
+	unsigned flag;
 
 	i = 1;
-	form_number = &(format->width);
+	offset = 1;
 	while (fmt[i] != '\0')
 	{
+		while ((flag = read_flag(fmt[i], format->flags)) != 0)
+		{
+			format->flags |= flag;
+			i++;
+		}
+		if (fmt[i] > '0' && fmt[i] <= '9')
+			i += read_number(fmt + i, &(format->width));
+		if (fmt[i] == '.')
+		{
+			i++;
+			i += read_number(fmt + i, &(format->precision));
+		}
 		if (is_specificator(fmt[i]))
 		{
 			format->spec = fmt[i++];
-			return(i);
+			break;
 		}
-		if (fmt[i] == '.')
-		{
-			form_number = &(format->length);
-			i++;
-			continue;
-		}
-		format->flags |= read_flag(fmt[i], format->flags, form_number);
-		if (format->flags & ERROR_FLAG)
-			exit(WRONG_SYMBOL);
-		i++;
+		if (offset == i)
+			break;
+		offset = i;
 	}
 	return (i);
 }

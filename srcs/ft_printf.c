@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/18 14:33:26 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 20:20:36 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/25 14:35:22 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ int		ft_printf(const char *fmt, ...)
 			if (!(format = ft_create_format()))
 				exit(-1);
 			fmt += ft_read_format(fmt, format);
+
 //			printf("spec = %c\n", format->spec);
 //			printf("flags = %u\n", format->flags);
-//			printf("wifth = %u\n", format->width);
-//			printf("prec = %u\n", format->length);
+//			printf("width = %u\n", format->width);
+//			printf("prec = %u\n", format->precision);
 			ret += ft_print_format(format, args);
 			free(format);
 			continue;
