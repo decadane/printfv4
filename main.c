@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/18 17:27:32 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 14:08:23 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/27 12:55:59 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int		main()
 {
 	int		n1, n2;
-	char	str[] = "|% .5d|\n";
+	char	str[] = "%";
 
-	n1 = printf(str, 10555);
-//	n2 = ft_printf(str, 999);
-//	printf("%d\n%d\n", n1, n2);
+	n1 = printf(str, -3452);
+	n2 = ft_printf(str, -3452);
+	printf("%d\n%d\n", n1, n2);
 	
 	return (0);
 }

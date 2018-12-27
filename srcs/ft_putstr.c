@@ -6,18 +6,22 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 18:50:49 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/19 18:50:59 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/26 20:06:44 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-void	ft_putstr(char *str)
+int		ft_putstr(char *str)
 {
 	size_t	len;
 
 	len = 0;
-	while (str[len] != '\0')
-		len++;
-	write(1, str, len);
+	if (str)
+	{
+		while (str[len] != '\0')
+			len++;
+		write(1, str, len);
+	}
+	return ((int)len);
 }

@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/18 20:09:13 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 17:11:21 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/27 12:49:05 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*dec(char *buf, size_t size, unsigned long long n, unsigned flag)
 {
 	if ((flag & SIGNED_FLAG) && (long long)n < 0)
 	{
-		flag &= NEG_FLAG;
+		buf[0] = '-';
 		n = -(long long)n;
 	}
 	buf[--size] = '\0';
@@ -26,6 +26,13 @@ static char	*dec(char *buf, size_t size, unsigned long long n, unsigned flag)
 		n /= 10;
 	}
 	buf[--size] = n + '0';
+	if (buf[0] != 0)
+	{
+		if (flag & SHOWSIGN_FLAG)
+			buf[0] = '+';
+		else if (flag & SPACE_FLAG)
+			buf[0] = ' ';
+	}
 	return (&(buf[size]));
 }
 
@@ -47,6 +54,11 @@ static char	*hex(char *buf, size_t size, unsigned long long n, unsigned flag)
 		n /= 16;
 	}
 	buf[--size] = hex_table[n % 16];
+	if (flag & HASH_FLAG)
+	{
+		buf[0] = '0';
+		buf[1] = flag & CAPS_FLAG ? 'X' : 'x';
+	}
 	return (&(buf[size]));
 }
 
@@ -60,18 +72,24 @@ static char	*oct(char *buf, size_t size, unsigned long long n, unsigned flag)
 		n /= 8;
 	}
 	buf[--size] = n % 8 + '0';
+	if (flag & HASH_FLAG)
+		buf[0] = '0';
 	return (&(buf[size]));
 }
 
 char	*itoa(t_format *fmt, unsigned long long n)
 {
 	char	c;
-	char	*str;
+	char	*str = NULL;
 	char	*tmp_str;
 	char	buf[32];
-	size_t	len;
+	long	len;
+	int		size;
 	
 	c = fmt->spec;
+	buf[0] = 0;
+	buf[1] = 0;
+	buf[2] = 0;
 	if (c == 'd' || c == 'i' || c == 'u')
 		str = dec(buf, sizeof(buf), n, fmt->flags);
 	else if (c == 'x' || c == 'X')
@@ -81,15 +99,28 @@ char	*itoa(t_format *fmt, unsigned long long n)
 	len = ft_strlen(str);
 	if (fmt->precision > len)
 	{
-		tmp_str = ft_strnew(fmt->precision);
+		fmt->flags &= !ZERO_FLAG;
+		size = fmt->precision + (buf[0] != 0) + (buf[1] != 0);
+		tmp_str = (char*)malloc(size + 1);
 		if (tmp_str == NULL)
 			exit(OUT_MEMORY);
 		while (len >= 0)
-			tmp_str[fmt->precision--] = str[len--];
-		while (fmt->precision > 0)
-			tmp_str[fmt->precision--] = '0';
-		tmp_str[0] = '0';
+			tmp_str[size--] = str[len--];
+		while (size >= 0)
+			tmp_str[size--] = '0';
+		if (buf[0])
+			tmp_str[0] = buf[0];
+		if (buf[1])
+			tmp_str[1] = buf[1];
 		str = tmp_str;
+	}
+	else
+	{
+		if (buf[1])
+			*(--str) = buf[1];
+		if (buf[0])
+			*(--str) = buf[0];
+		str = ft_strdup(str);
 	}
 	return (str);
 }

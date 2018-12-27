@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 13:26:19 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/25 14:34:17 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/26 18:40:20 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static unsigned	read_flag(char ch, unsigned flags)
 	return (0); 
 }
 
-static int	read_number(const char *fmt, unsigned *num)
+static int	read_number(const char *fmt, int *num)
 {
 	int		i;
 

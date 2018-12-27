@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 13:22:49 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 17:00:40 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/26 19:22:28 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ typedef struct		s_format
 	char			*str;
 	char			sign;
 	unsigned		flags;
-	unsigned		width;
-	unsigned		precision;
+	int				width;
+	int				precision;
 }					t_format;
 
-void		ft_putchar(char);
-void		ft_putstr(char*);
+int			ft_putchar(char);
+int			ft_putstr(char*);
 
 int			ft_printf(const char *fmt, ...);
 size_t		ft_strlen(char *str);

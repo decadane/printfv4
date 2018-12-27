@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 13:38:57 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 16:13:00 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/26 18:40:49 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int		ft_print_s(t_format fmt, char *str)
 {
 	int			ret;
-	unsigned	len;
+	int			len;
 	char		is_printed;
 	char		filler;
 

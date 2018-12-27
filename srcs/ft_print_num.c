@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 17:14:17 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 17:14:20 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/27 12:33:55 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,28 +40,6 @@ static void	cast_unsigned(unsigned long long *n, t_format *fmt, va_list args)
 		*n = va_arg(args, unsigned int);
 }
 
-static char	*add_precision(char *str, unsigned precision)
-{
-	char				*tmp_str;
-	unsigned			len;
-	char				sign;
-	
-	sign = '0';
-	len = ft_strlen(str);
-	if (!(tmp_str = ft_strnew(precision)))
-		exit(OUT_MEMORY);
-	while (len > 0)
-		tmp_str[precision--] = str[len--];
-	if (str[0] == '-' || str[0] == '+')
-		sign = str[0];
-	else
-		tmp_str[precision--] = str[0];
-	while (precision > 0)
-		tmp_str[precision--] = '0';
-	tmp_str[0] = sign;
-	return (tmp_str);
-}
-
 static void	get_string(t_format *fmt, va_list args)
 {
 	unsigned long long	n;
@@ -81,26 +59,62 @@ static void	get_string(t_format *fmt, va_list args)
 	fmt->str = itoa(fmt, n);
 }
 
+/*static char	*print_flag(t_format *fmt)
+{
+	unsigned	f;
+	char		*fstr;
+	
+	fstr = NULL;
+	f = fmt->flags;
+	if (f & SIGNED_FLAG)
+	{
+		if (f & NEG_FLAG)
+			fstr = "-";
+		else if (f & SHOWSIGN_FLAG)
+			fstr = "+";
+		else if (f & SPACE_FLAG)
+			fstr = " ";
+	}
+	else if (fmt->spec == 'x' && f & HASH_FLAG)
+	{
+		if (f & CAPS_FLAG)
+			fstr = "0X";
+		else
+			fstr = "0x";
+	}
+	else if (fmt->spec == 'o' && f & HASH_FLAG)
+		fstr = "0";
+	return (fstr);
+}
+*/
 int		ft_print_num(t_format *fmt, va_list args)
 {
 	int			ret;
-	size_t		len;
+	int			len;
 	char	is_printed;
+	char	filler;
+//	char	*fstr;
 
 	is_printed = 0;
 	get_string(fmt, args);
-	len = ft_strlen(fmt->str);
-	ret = len >= fmt->width ? len : fmt->width;
+//	fstr = print_flag(fmt);
+	len = ft_strlen(fmt->str);// + ft_strlen(fstr);
+	ret = len > fmt->width ? len : fmt->width;
 	if (fmt->flags & LEFTFORMAT_FLAG)
 	{
-		write(1, fmt->str, len);
+//		ft_putstr(fstr);
+		ft_putstr(fmt->str);
 		is_printed = 1;
 		fmt->flags &= !ZERO_FLAG;
 	}
+	filler = fmt->flags & ZERO_FLAG ? '0' : ' ';
 	while (len < fmt->width--)
-		ft_putchar(' ');
+		ft_putchar(filler);
 	if (!is_printed)
-		write(1, fmt->str, len);
+	{
+//		ft_putstr(fstr);
+		ft_putstr(fmt->str);
+	}
 	free(fmt->str);
 	return (ret);
 }
