@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 13:22:49 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 19:22:28 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/27 18:51:23 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # define OUT_MEMORY		-1
 # define WRONG_SYMBOL	-2
 
-# define ERROR_FLAG			0x10000000		//error symbol
 # define HH_FLAG			0x00000001		//hh
 # define H_FLAG				0x00000002		//h
 # define L_FLAG				0x00000004		//l
@@ -32,6 +31,8 @@
 # define SPACE_FLAG			0x00000400		//' '
 # define POS_FLAG			0x00000800		//positive number
 # define NEG_FLAG			0x00001000		//negative number
+# define WIDTH				0x10000000
+# define PRECISION			0x20000000
 
 
 
@@ -51,6 +52,7 @@ typedef struct		s_format
 }					t_format;
 
 int			ft_putchar(char);
+int			ft_putnchar(char, size_t);
 int			ft_putstr(char*);
 
 int			ft_printf(const char *fmt, ...);
@@ -60,6 +62,7 @@ char		*ft_strnew(size_t size);
 int			ft_print_c(t_format, char);
 int			ft_print_s(t_format, char*);
 int			ft_print_num(t_format*, va_list);
+int			ft_print_dec(unsigned long long, t_format*);
 int			ft_print_p(void *p);
 
 char		*itoa(t_format *fmt, unsigned long long n);

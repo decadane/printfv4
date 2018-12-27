@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 13:26:19 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 18:40:20 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/27 19:51:27 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	read_number(const char *fmt, int *num)
 	return (i);
 }
 
-int				ft_read_format(const char *fmt, t_format *format)
+int		ft_read_format(const char *fmt, t_format *format)
 {
 	int		offset;
 	int		i;
@@ -69,9 +69,13 @@ int				ft_read_format(const char *fmt, t_format *format)
 			i++;
 		}
 		if (fmt[i] > '0' && fmt[i] <= '9')
+		{
+			format->flags |= WIDTH;
 			i += read_number(fmt + i, &(format->width));
+		}
 		if (fmt[i] == '.')
 		{
+			format->flags |= PRECISION;
 			i++;
 			i += read_number(fmt + i, &(format->precision));
 		}
@@ -84,5 +88,6 @@ int				ft_read_format(const char *fmt, t_format *format)
 			break;
 		offset = i;
 	}
+	format->flags & PRECISION ? format->flags ^= ZERO_FLAG : 0;
 	return (i);
 }

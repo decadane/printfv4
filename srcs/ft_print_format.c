@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 16:30:38 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/26 18:22:01 by ffahey           ###   ########.fr       */
+/*   Updated: 2018/12/27 14:54:31 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ int		ft_print_format(t_format *fmt, va_list args)
 		len = ft_print_c(*fmt, (char)va_arg(args, int));
 	if (fmt->spec == 's')
 		len = ft_print_s(*fmt, va_arg(args, char*));
-	if (fmt->spec == 'p')
-		len = ft_print_p(va_arg(args, void*));
 	if (is_number(fmt->spec))
 	{
 		len = ft_print_num(fmt, args);

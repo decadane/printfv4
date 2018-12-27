@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putnchar.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/18 17:27:32 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/27 19:47:07 by ffahey           ###   ########.fr       */
+/*   Created: 2018/12/27 16:59:50 by ffahey            #+#    #+#             */
+/*   Updated: 2018/12/27 19:07:57 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include <unistd.h>
 
-int		main()
+int		ft_putnchar(char c, size_t count)
 {
-	int		n1, n2;
-	char	str[] = "|%+010.7u|\n";
-
-	n1 = printf(str, 3452);
-	n2 = ft_printf(str, 3452);
-	printf("%d\n%d\n", n1, n2);
+	size_t		i;
 	
-	return (0);
+	i = 0;
+	while (i < count)
+	{
+		write(1, &c, 1);
+		i++;
+	}
+	return (count);
 }
