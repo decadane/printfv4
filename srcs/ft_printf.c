@@ -6,11 +6,10 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/18 14:33:26 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/27 14:50:37 by ffahey           ###   ########.fr       */
+/*   Updated: 2019/01/07 19:33:01 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "ft_printf.h"
 
 int		ft_printf(const char *fmt, ...)
@@ -21,10 +20,8 @@ int		ft_printf(const char *fmt, ...)
 	
 	ret = 0;
 	va_start(args, fmt);
-	while (1)
+	while (*fmt != '\0')
 	{
-		if (*fmt == '\0')
-			break;
 		if (*fmt == '%')
 		{
 			if (!(format = ft_create_format()))

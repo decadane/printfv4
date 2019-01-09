@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_format.c                                  :+:      :+:    :+:   */
+/*   ft_wstrlen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/19 16:30:38 by ffahey            #+#    #+#             */
-/*   Updated: 2019/01/08 13:30:50 by ffahey           ###   ########.fr       */
+/*   Created: 2019/01/09 13:58:57 by ffahey            #+#    #+#             */
+/*   Updated: 2019/01/09 14:21:01 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		is_number(char ch)
+int		ft_wstrlen(wchar_t *ws)
 {
-	return (ch == 'd' || ch == 'u' || ch == 'o' || ch == 'x');
-}
+	int		ws_len;
+	int		wc_len;
 
-int		ft_print_format(t_format *fmt, va_list args)
-{
-	int		len;
-	
-	len = 0;
-	if (fmt->spec == 'c' || fmt->spec == '%')
-		len = ft_print_c(*fmt, args);
-	if (fmt->spec == 's')
-		len = ft_print_s(fmt, args);
-	if (fmt->spec == 'p')
-		len = ft_print_p(fmt, args);
-	if (is_number(fmt->spec))
+	if (ws == NULL)
+		return (-1);
+	ws_len = 0;
+	while (*ws)
 	{
-		len = ft_print_num(fmt, args);
+		if ((wc_len = ft_wcharlen(*ws)) == -1)
+			return (-1);
+		ws_len += wc_len;
+		ws++;
 	}
-	return (len);
+	return (ws_len);
 }

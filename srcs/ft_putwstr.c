@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_p.c                                       :+:      :+:    :+:   */
+/*   ft_putwstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/17 13:44:39 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/25 12:43:53 by ffahey           ###   ########.fr       */
+/*   Created: 2019/01/09 14:03:32 by ffahey            #+#    #+#             */
+/*   Updated: 2019/01/09 14:09:06 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "ft_printf.h"
 
-int		ft_print_p(void *ptr)
+int		ft_putwstr(wchar_t *ws)
 {
-	unsigned long	num;
-	unsigned char	tmp;
-	char			str[20];
-	size_t			i;
+	int		ws_len;
+	int		wchar_len;
 
-	i = 20;
-	str[--i] = 0;
-	num = (unsigned long)ptr;
-	while (num)
+	if (ws == NULL)
+		return (-1);
+	ws_len = 0;
+	while (*ws)
 	{
-		tmp = num % 16;
-		num /= 16;
-		if (tmp > 9)
-			str[--i] = 'a' + tmp % 10;
-		else
-			str[--i] = '0' + tmp;
+		if ((wchar_len = ft_putwchar(*ws)) == -1)
+			return (-1);
+		ws_len += wchar_len;
+		ws++;
 	}
-	ft_putstr("0x");
-	ft_putstr(str + i);
-	return (ft_strlen(str + i) + 2);
+	return (ws_len);
 }

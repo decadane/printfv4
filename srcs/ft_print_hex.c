@@ -1,39 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_dec.c                                     :+:      :+:    :+:   */
+/*   ft_print_hex.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/27 14:56:28 by ffahey            #+#    #+#             */
-/*   Updated: 2019/01/07 19:29:40 by ffahey           ###   ########.fr       */
+/*   Created: 2019/01/08 12:11:07 by ffahey            #+#    #+#             */
+/*   Updated: 2019/01/08 13:40:39 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "ft_printf.h"
 
-static char	*dec_to_str(char *buf, size_t size, unsigned long long n, unsigned flags)
+static char	*hex_to_str(char *buf, size_t size, unsigned long long n, t_format *f)
 {
+	size_t	i;
+	char hex_table[16];
+
 	buf[0] = 0;
 	buf[1] = 0;
-	if ((flags & SIGNED_FLAG) && (long long)n < 0)
-	{
-		buf[0] = '-';
-		n = -(long long)n;
-	}
+	buf[2] = 0;
+	i = -1;
+	while (++i < 10)
+		hex_table[i] = i + '0';
+	hex_table[i] = (f->flags & CAPS_FLAG) ? 'A' : 'a';
+	while (++i < 16)
+		hex_table[i] = hex_table[i - 1] + 1;
 	buf[--size] = '\0';
-	while (n >= 10)
+	while (n >= 16)
 	{
-		buf[--size] = n % 10 + '0';
-		n /= 10;
+		buf[--size] = hex_table[n % 16];
+		n /= 16;
 	}
-	buf[--size] = n % 10 + '0';
-	if (buf[0] == 0 && flags & SIGNED_FLAG)
+	buf[--size] = hex_table[n % 16];
+	if ((f->flags & HASH_FLAG && n) || f->spec == 'p')
 	{
-		if (flags & SHOWSIGN_FLAG)
-			buf[0] = '+';
-		else if (flags & SPACE_FLAG)
-			buf[0] = ' ';
+		buf[0] = '0';
+		buf[1] = f->flags & CAPS_FLAG ? 'X' : 'x';
 	}
 	return (&(buf[size]));
 }
@@ -46,7 +48,7 @@ static int	get_zero_count(t_format *fmt, int len, char sign)
 	if (fmt->flags & PRECISION)
 		count = fmt->precision - len;
 	else if (fmt->flags & WIDTH && fmt->flags & ZERO_FLAG)
-		count = fmt->width - (len + (sign != 0));
+		count = fmt->width - (len + (sign != 0) * 2);
 	return (count > 0 ? count : 0);
 }
 
@@ -59,31 +61,45 @@ static int	get_space_count(t_format *fmt, int len, char sign)
 	{
 		if (fmt->flags & PRECISION)
 			len = fmt->precision > len ? fmt->precision : len;
-		len += (sign != 0);
+		len += (sign != 0) * 2;
 		count = fmt->width - len;
 	}
 	return (count > 0 ? count : 0);
 }
 
-int		ft_print_dec(unsigned long long n, t_format *fmt)
+int		ft_print_hex(unsigned long long n, t_format *fmt)
 {
-	char	buf[23];
+	char	buf[25];
 	char	*digits;
 	int		len;
 	int		ret;
 
-	
 	ret = 0;
-	digits = dec_to_str(buf, sizeof(buf), n, fmt->flags);
+	digits = hex_to_str(buf, sizeof(buf), n, fmt);
 	len = ft_strlen(digits);
 	if (!(fmt->flags & LEFTFORMAT_FLAG) && !(fmt->flags & ZERO_FLAG))
 		ret += ft_putnchar(' ', (size_t)get_space_count(fmt, len, buf[0]));
-	ret += ft_putstr(buf);
-	
+//	if (!(fmt->flags & PRECISION && fmt->precision > len))
+		ret += ft_putstr(buf);
 	ret += ft_putnchar('0', (size_t)get_zero_count(fmt, len, buf[0]));
 	if (n != 0 || !(fmt->flags & PRECISION && fmt->precision == 0))
 			ret += ft_putstr(digits);
 	if (fmt->flags & LEFTFORMAT_FLAG)
 		ret += ft_putnchar(' ', (size_t)get_space_count(fmt, len, buf[0]));
+	return (ret);
+}
+
+int		ft_print_p(t_format *fmt, va_list args)
+{
+	unsigned long long	num;
+	int					ret;
+	void				*ptr;
+
+	ret = 0;
+	fmt->flags |= HASH_FLAG;
+	ptr = va_arg(args, void*);
+	num = (unsigned long long)ptr;
+
+	ret = ft_print_hex(num, fmt);
 	return (ret);
 }

@@ -1,36 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_format.c                                  :+:      :+:    :+:   */
+/*   ft_print_wc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/19 16:30:38 by ffahey            #+#    #+#             */
-/*   Updated: 2019/01/08 13:30:50 by ffahey           ###   ########.fr       */
+/*   Created: 2019/01/09 13:12:54 by ffahey            #+#    #+#             */
+/*   Updated: 2019/01/09 13:34:48 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		is_number(char ch)
+static int	print_spaces(int width, int len)
 {
-	return (ch == 'd' || ch == 'u' || ch == 'o' || ch == 'x');
+	if (width > len)
+	{
+		len = width - len;
+		ft_putnchar(' ', len);
+	}
+	return (len);
 }
 
-int		ft_print_format(t_format *fmt, va_list args)
+int		ft_print_wc(t_format f, wchar_t wch)
 {
 	int		len;
-	
+	int		wc_len;
+
 	len = 0;
-	if (fmt->spec == 'c' || fmt->spec == '%')
-		len = ft_print_c(*fmt, args);
-	if (fmt->spec == 's')
-		len = ft_print_s(fmt, args);
-	if (fmt->spec == 'p')
-		len = ft_print_p(fmt, args);
-	if (is_number(fmt->spec))
-	{
-		len = ft_print_num(fmt, args);
-	}
+	if ((wc_len = ft_wcharlen(wch)) == -1)
+		return (-1);
+	if ((f.flags & WIDTH) && !(f.flags & LEFTFORMAT_FLAG))
+		len += print_spaces(f.width, wc_len);
+	len += ft_putwchar(wch);
+	if ((f.flags & WIDTH) && (f.flags & LEFTFORMAT_FLAG))
+		len += print_spaces(f.width, wc_len);
 	return (len);
 }

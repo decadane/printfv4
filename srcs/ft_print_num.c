@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 17:14:17 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/27 19:50:44 by ffahey           ###   ########.fr       */
+/*   Updated: 2019/01/08 12:17:52 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 static void	cast_signed(unsigned long long *n, t_format *fmt, va_list args)
 {
-	if (fmt->flags & LL_FLAG)
+	if (fmt->flags & J_FLAG)
+		*n = va_arg(args, intmax_t);
+	else if (fmt->flags & LL_FLAG)
 		*n = va_arg(args, long long);
 	else if (fmt->flags & L_FLAG)
 		*n = va_arg(args, long);
@@ -28,7 +30,11 @@ static void	cast_signed(unsigned long long *n, t_format *fmt, va_list args)
 
 static void	cast_unsigned(unsigned long long *n, t_format *fmt, va_list args)
 {
-	if (fmt->flags & LL_FLAG)
+	if (fmt->flags & J_FLAG)
+		*n = va_arg(args, uintmax_t);
+	else if (fmt->flags & Z_FLAG)
+		*n = va_arg(args, size_t);
+	else if (fmt->flags & LL_FLAG)
 		*n = va_arg(args, unsigned long long);
 	else if (fmt->flags & L_FLAG)
 		*n = va_arg(args, unsigned long);
@@ -46,16 +52,18 @@ int		ft_print_num(t_format *fmt, va_list args)
 	unsigned long long	n;
 
 	ret = 0;
-	if (fmt->spec == 'd' || fmt->spec == 'i')
+	if (fmt->spec == 'd')
 	{
 		fmt->flags |= SIGNED_FLAG;
 		cast_signed(&n, fmt, args);
-		ret = ft_print_dec(n, fmt);
 	}
-	else if (fmt->spec == 'u')
-	{
+	else
 		cast_unsigned(&n, fmt, args);
+	if (fmt->spec == 'd' || fmt->spec == 'u')
 		ret = ft_print_dec(n, fmt);
-	}
+	else if (fmt->spec == 'o')
+		ret = ft_print_oct(n, fmt);
+	else if (fmt->spec == 'x')
+		ret = ft_print_hex(n, fmt);
 	return (ret);
 }

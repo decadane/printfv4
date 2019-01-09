@@ -1,40 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_dec.c                                     :+:      :+:    :+:   */
+/*   ft_print_oct.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/27 14:56:28 by ffahey            #+#    #+#             */
-/*   Updated: 2019/01/07 19:29:40 by ffahey           ###   ########.fr       */
+/*   Created: 2019/01/07 19:50:28 by ffahey            #+#    #+#             */
+/*   Updated: 2019/01/08 12:10:17 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*dec_to_str(char *buf, size_t size, unsigned long long n, unsigned flags)
+static char	*oct_to_str(char *buf, size_t size, unsigned long long n, unsigned flags)
 {
 	buf[0] = 0;
 	buf[1] = 0;
-	if ((flags & SIGNED_FLAG) && (long long)n < 0)
-	{
-		buf[0] = '-';
-		n = -(long long)n;
-	}
 	buf[--size] = '\0';
-	while (n >= 10)
+	if (flags & HASH_FLAG && n)
+		buf[0] = '0';
+	while (n >= 8)
 	{
-		buf[--size] = n % 10 + '0';
-		n /= 10;
+		buf[--size] = n % 8 + '0';
+		n /= 8;
 	}
-	buf[--size] = n % 10 + '0';
-	if (buf[0] == 0 && flags & SIGNED_FLAG)
-	{
-		if (flags & SHOWSIGN_FLAG)
-			buf[0] = '+';
-		else if (flags & SPACE_FLAG)
-			buf[0] = ' ';
-	}
+	buf[--size] = n % 8 + '0';
 	return (&(buf[size]));
 }
 
@@ -65,21 +55,20 @@ static int	get_space_count(t_format *fmt, int len, char sign)
 	return (count > 0 ? count : 0);
 }
 
-int		ft_print_dec(unsigned long long n, t_format *fmt)
+int		ft_print_oct(unsigned long long n, t_format *fmt)
 {
-	char	buf[23];
+	char	buf[25];
 	char	*digits;
 	int		len;
 	int		ret;
 
-	
 	ret = 0;
-	digits = dec_to_str(buf, sizeof(buf), n, fmt->flags);
+	digits = oct_to_str(buf, sizeof(buf), n, fmt->flags);
 	len = ft_strlen(digits);
 	if (!(fmt->flags & LEFTFORMAT_FLAG) && !(fmt->flags & ZERO_FLAG))
 		ret += ft_putnchar(' ', (size_t)get_space_count(fmt, len, buf[0]));
-	ret += ft_putstr(buf);
-	
+	if (!(fmt->flags & PRECISION && fmt->precision > len))
+		ret += ft_putstr(buf);
 	ret += ft_putnchar('0', (size_t)get_zero_count(fmt, len, buf[0]));
 	if (n != 0 || !(fmt->flags & PRECISION && fmt->precision == 0))
 			ret += ft_putstr(digits);

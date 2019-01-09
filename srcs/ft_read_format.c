@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 13:26:19 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/27 19:51:27 by ffahey           ###   ########.fr       */
+/*   Updated: 2019/01/08 13:18:54 by ffahey           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,28 @@
 
 static int		is_specificator(char c)
 {
-	return (c == 'd' || c == 'i' || c == 'u' || c == 'o' || 
-			c == 'x' || c == 'X' || c == 'c' || c == 's' || 
-			c == 'p' || c == '%' || c == 'f');
+	char	*str; 
+
+	str = SPECIFICATOR;
+	while (*str)
+	{
+		if (c == *str)
+			return (1);
+		str++;
+	}
+	return (0);
 }
 
 static unsigned	read_flag(char ch, unsigned flags)
 {
-	if (ch == 'h')
+	if (ch == 'h') 
 		return ((flags & H_FLAG) ? HH_FLAG : H_FLAG);
 	if (ch == 'l')
 		return ((flags & L_FLAG) ? LL_FLAG : L_FLAG);
+	if (ch == 'z')
+		return (Z_FLAG);
+	if (ch == 'j')
+		return (J_FLAG);
 	if (ch == '-')
 		return (LEFTFORMAT_FLAG);
 	if (ch == '+')
@@ -40,7 +51,7 @@ static unsigned	read_flag(char ch, unsigned flags)
 
 static int	read_number(const char *fmt, int *num)
 {
-	int		i;
+ 	int		i;
 
 	i = 0;
 	*num = 0;
@@ -51,6 +62,26 @@ static int	read_number(const char *fmt, int *num)
 		i++;
 	}
 	return (i);
+}
+
+static void	read_specificator(char c, t_format *f)
+{
+	if (c == 'X')
+	{
+		f->flags |= CAPS_FLAG;
+		f->spec = 'x';
+	}
+	else if (c == 'C' || c == 'S' || c == 'D' || c == 'O' || c == 'U')
+	{
+		f->flags |= L_FLAG;
+		f->spec = c + 32;
+	}
+	else if (c == 'i')
+		f->spec = 'd';
+	else
+		f->spec = c;
+	if (f->flags & PRECISION || f->flags & LEFTFORMAT_FLAG)
+		f->flags &= ~ZERO_FLAG;
 }
 
 int		ft_read_format(const char *fmt, t_format *format)
@@ -81,13 +112,12 @@ int		ft_read_format(const char *fmt, t_format *format)
 		}
 		if (is_specificator(fmt[i]))
 		{
-			format->spec = fmt[i++];
+			read_specificator(fmt[i++], format);
 			break;
 		}
 		if (offset == i)
 			break;
 		offset = i;
 	}
-	format->flags & PRECISION ? format->flags ^= ZERO_FLAG : 0;
 	return (i);
 }
