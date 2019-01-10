@@ -6,7 +6,7 @@
 #    By: ffahey <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/17 13:11:37 by ffahey            #+#    #+#              #
-#    Updated: 2019/01/09 14:10:32 by ffahey           ###   ########.fr        #
+#    Updated: 2019/01/10 14:51:30 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 vpath %.c srcs
@@ -24,7 +24,8 @@ BIN_PATH = bin
 SRC = ft_putchar.c ft_putwchar.c ft_putnchar.c ft_putstr.c ft_strlen.c  ft_strdup.c ft_wstrlen.c ft_putwstr.c\
 	  ft_printf.c ft_read_format.c ft_create_format.c ft_print_format.c \
 	  ft_print_c.c ft_print_s.c ft_print_num.c  ft_print_dec.c ft_itoa.c ft_print_oct.c ft_print_hex.c\
-	  ft_printbit.c
+	  float_to_str.c ft_itoa.c ft_strjoin.c
+	  
 
 OBJ = $(patsubst %.c,bin/%.o,$(SRC))
 

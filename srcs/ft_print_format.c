@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 16:30:38 by ffahey            #+#    #+#             */
-/*   Updated: 2019/01/08 13:30:50 by ffahey           ###   ########.fr       */
+/*   Updated: 2019/01/09 18:52:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,7 @@ int		ft_print_format(t_format *fmt, va_list args)
 	{
 		len = ft_print_num(fmt, args);
 	}
+	if (fmt->spec == 'f')
+		len = ft_print_f(fmt, args);
 	return (len);
 }

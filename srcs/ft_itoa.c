@@ -3,124 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: marvin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/18 20:09:13 by ffahey            #+#    #+#             */
-/*   Updated: 2018/12/27 12:49:05 by ffahey           ###   ########.fr       */
+/*   Created: 2018/11/29 12:01:50 by marvin            #+#    #+#             */
+/*   Updated: 2019/01/10 15:21:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdlib.h>
 
-static char	*dec(char *buf, size_t size, unsigned long long n, unsigned flag)
+static unsigned long long	ft_power(int num, int power)
 {
-	if ((flag & SIGNED_FLAG) && (long long)n < 0)
+	int					i;
+	unsigned long long	res;
+
+	i = 0;
+	res = 1;
+	while (i < power)
 	{
-		buf[0] = '-';
-		n = -(long long)n;
+		res *= num;
+		i++;
 	}
-	buf[--size] = '\0';
-	while (n >= 10)
+	return (res);
+}
+
+static int					ft_count(long n)
+{
+	int		count;
+
+	count = 1;
+	while (n / 10 != 0)
 	{
-		buf[--size] = n % 10 + '0';
 		n /= 10;
+		count++;
 	}
-	buf[--size] = n + '0';
-	if (buf[0] != 0)
-	{
-		if (flag & SHOWSIGN_FLAG)
-			buf[0] = '+';
-		else if (flag & SPACE_FLAG)
-			buf[0] = ' ';
-	}
-	return (&(buf[size]));
+	return (count);
 }
 
-static char	*hex(char *buf, size_t size, unsigned long long n, unsigned flag)
+static char					ft_get_char(long n, int len)
 {
-	size_t	i;
-	char hex_table[16];
-
-	i = -1;
-	while (++i < 10)
-		hex_table[i] = i + '0';
-	hex_table[i] = (flag & CAPS_FLAG) ? 'A' : 'a';
-	while (++i < 16)
-		hex_table[i] = hex_table[i - 1] + 1;
-	buf[--size] = '\0';
-	while (n >= 16)
-	{
-		buf[--size] = hex_table[n % 16];
-		n /= 16;
-	}
-	buf[--size] = hex_table[n % 16];
-	if (flag & HASH_FLAG)
-	{
-		buf[0] = '0';
-		buf[1] = flag & CAPS_FLAG ? 'X' : 'x';
-	}
-	return (&(buf[size]));
+	return ((n / ft_power(10, len - 1)) % 10 + '0');
 }
 
-static char	*oct(char *buf, size_t size, unsigned long long n, unsigned flag)
+static char					*ft_get_str(long n, int len, char *head, int is_neg)
 {
-	(void)flag;
-	buf[--size] = '\0';
-	while (n >= 8)
+	char	*result;
+
+	result = head;
+	if (is_neg)
 	{
-		buf[--size] = n % 8 + '0';
-		n /= 8;
+		*head = '-';
+		head++;
 	}
-	buf[--size] = n % 8 + '0';
-	if (flag & HASH_FLAG)
-		buf[0] = '0';
-	return (&(buf[size]));
+	while (len > 0)
+	{
+		*head = ft_get_char(n, len);
+		len--;
+		head++;
+	}
+	*head = '\0';
+	return (result);
 }
 
-char	*itoa(t_format *fmt, unsigned long long n)
+char						*ft_itoa(long n)
 {
-	char	c;
-	char	*str = NULL;
-	char	*tmp_str;
-	char	buf[32];
-	long	len;
-	int		size;
-	
-	c = fmt->spec;
-	buf[0] = 0;
-	buf[1] = 0;
-	buf[2] = 0;
-	if (c == 'd' || c == 'i' || c == 'u')
-		str = dec(buf, sizeof(buf), n, fmt->flags);
-	else if (c == 'x' || c == 'X')
-		str = hex(buf, sizeof(buf), n, fmt->flags);
-	else if (c == 'o')
-		str = oct(buf, sizeof(buf), n, fmt->flags);
-	len = ft_strlen(str);
-	if (fmt->precision > len)
+	int		len;
+	char	*result;
+	int		is_neg;
+
+	is_neg = 0;
+	len = ft_count(n);
+	if (n < 0)
 	{
-		fmt->flags &= !ZERO_FLAG;
-		size = fmt->precision + (buf[0] != 0) + (buf[1] != 0);
-		tmp_str = (char*)malloc(size + 1);
-		if (tmp_str == NULL)
-			exit(OUT_MEMORY);
-		while (len >= 0)
-			tmp_str[size--] = str[len--];
-		while (size >= 0)
-			tmp_str[size--] = '0';
-		if (buf[0])
-			tmp_str[0] = buf[0];
-		if (buf[1])
-			tmp_str[1] = buf[1];
-		str = tmp_str;
+		is_neg = 1;
+		n *= -1;
+		result = (char*)malloc(len + 2);
 	}
 	else
-	{
-		if (buf[1])
-			*(--str) = buf[1];
-		if (buf[0])
-			*(--str) = buf[0];
-		str = ft_strdup(str);
-	}
-	return (str);
+		result = (char*)malloc(len + 1);
+	if (result == NULL)
+		return (NULL);
+	return (ft_get_str(n, len, result, is_neg));
 }

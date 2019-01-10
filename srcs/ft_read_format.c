@@ -6,7 +6,7 @@
 /*   By: ffahey <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/19 13:26:19 by ffahey            #+#    #+#             */
-/*   Updated: 2019/01/08 13:18:54 by ffahey           ###   ########.fr       */
+/*   Updated: 2019/01/10 14:49:38 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static int	read_number(const char *fmt, int *num)
 
 static void	read_specificator(char c, t_format *f)
 {
-	if (c == 'X')
+	if (c == 'X' || c == 'F')
 	{
 		f->flags |= CAPS_FLAG;
-		f->spec = 'x';
+		f->spec = c + 32;
 	}
 	else if (c == 'C' || c == 'S' || c == 'D' || c == 'O' || c == 'U')
 	{
@@ -80,7 +80,8 @@ static void	read_specificator(char c, t_format *f)
 		f->spec = 'd';
 	else
 		f->spec = c;
-	if (f->flags & PRECISION || f->flags & LEFTFORMAT_FLAG)
+	if ((f->flags & PRECISION || f->flags & LEFTFORMAT_FLAG) && c != 'f'
+				&& c != 'F')
 		f->flags &= ~ZERO_FLAG;
 }
 
